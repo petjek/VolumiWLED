@@ -85,7 +85,7 @@ class WLEDClient:
     
     def clear_leds(self, led_count: int) -> bool:
         """Turn off all LEDs"""
-        return self.set_segment(start=0, stop=led_count, color=(0, 0, 0))
+        return self.set_segment(start=0, stop=None, color=(0, 0, 0))
     
     def set_individual_leds(self, led_data: list) -> bool:
         """Set individual LED colors"""
@@ -116,6 +116,7 @@ class EffectManager:
         self.led_count = config['led']['count']
         self.brightness = config['led']['brightness']
         self.rotation_offset = 0
+        self.last_rotation_time = time.time()
         
     def apply_progress_bar(self, progress: float, duration: float) -> bool:
         """
@@ -160,13 +161,22 @@ class EffectManager:
         color = tuple(self.config['effects']['vinyl_rotation']['color'])
         speed = self.config['effects']['vinyl_rotation']['speed']
         
-        # Update rotation offset
-        self.rotation_offset = (self.rotation_offset + 1) % self.led_count
+        # Update rotation offset based on elapsed time and speed setting
+        # Speed parameter is in milliseconds - higher value = slower rotation
+        current_time = time.time()
+        elapsed = current_time - self.last_rotation_time
+        
+        # Calculate rotation steps based on speed (convert speed to rotations per second)
+        # speed=50ms means 20 rotations per second, speed=100ms means 10 rotations per second
+        rotation_speed = 1000.0 / max(speed, 1)  # rotations per second
+        rotation_increment = rotation_speed * elapsed * self.led_count
+        
+        self.rotation_offset = (self.rotation_offset + rotation_increment) % self.led_count
+        self.last_rotation_time = current_time
         
         # Create rotating effect: lit LEDs move around the strip
         # Create a pattern that looks like vinyl grooves
         led_data = []
-        pattern_width = max(1, self.led_count // 8)  # Width of the lit section
         
         for i in range(self.led_count):
             # Calculate position relative to rotation offset
@@ -182,9 +192,6 @@ class EffectManager:
             b = int(color[2] * intensity)
             
             led_data.extend([i, r, g, b])
-        
-        # Add a slight delay based on speed setting
-        time.sleep(speed / 1000.0)
         
         return self.wled.set_individual_leds(led_data)
 
