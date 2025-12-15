@@ -1,0 +1,14 @@
+[Unit]
+Description=VolumiWLED - Volumio to WLED LED Visualization
+After=network.target
+
+[Service]
+Type=simple
+User=volumio
+WorkingDirectory=/home/volumio/VolumiWLED
+ExecStart=/usr/bin/python3 /home/volumio/VolumiWLED/volumiwled.py -c /home/volumio/VolumiWLED/config.yaml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

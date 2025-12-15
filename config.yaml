@@ -1,0 +1,29 @@
+# VolumiWLED Configuration
+
+# Volumio settings
+volumio:
+  host: "localhost"  # Volumio host address
+  port: 3000         # Volumio port
+
+# WLED settings
+wled:
+  host: "192.168.1.100"  # WLED device IP address
+  
+# LED settings
+led:
+  count: 60          # Total number of LEDs in strip
+  brightness: 128    # Default brightness (0-255)
+
+# Effect settings
+effects:
+  progress_bar:
+    enabled: true
+    color: [0, 255, 0]  # RGB color for progress bar (green)
+    
+  vinyl_rotation:
+    enabled: true
+    color: [255, 0, 255]  # RGB color for vinyl effect (magenta)
+    speed: 50           # Rotation speed (lower = faster)
+
+# Update interval in seconds
+update_interval: 0.5
