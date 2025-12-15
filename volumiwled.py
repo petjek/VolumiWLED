@@ -40,8 +40,9 @@ class VolumioClient:
 class WLEDClient:
     """Client for controlling WLED via REST API"""
     
-    def __init__(self, host: str):
-        self.base_url = f"http://{host}"
+def __init__(self, host: str, brightness: int = 128):
+    self.base_url = f"http://{host}"
+    self.brightness = brightness
         
     def set_state(self, on: bool = True, brightness: Optional[int] = None) -> bool:
         """Set WLED on/off state and brightness"""
@@ -91,7 +92,10 @@ class WLEDClient:
         """Set individual LED colors"""
         try:
             payload = {
+                "on": True,
+                "bri": self.brightness,
                 "seg": [{
+                    "id": 0,
                     "i": led_data
                 }]
             }
@@ -209,7 +213,10 @@ class VolumiWLED:
             self.config['volumio']['host'],
             self.config['volumio']['port']
         )
-        self.wled = WLEDClient(self.config['wled']['host'])
+        self.wled = WLEDClient(
+            self.config['wled']['host'],
+            self.config['led']['brightness']
+        )
         self.effects = EffectManager(self.wled, self.config)
         
         # Track previous state
