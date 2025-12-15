@@ -245,7 +245,7 @@ class VolumiWLED:
                 if status == 'play':
                     # Get track info
                     seek = (state.get('seek') or 0) / 1000  # Convert ms to seconds, handle None
-                    duration = state.get('duration', 0)
+                    duration = state.get('duration') or 0
                     
                     # Choose which effect to apply
                     if self.config['effects']['progress_bar']['enabled'] and duration > 0:
