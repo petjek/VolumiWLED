@@ -187,6 +187,15 @@ The application prioritizes the progress bar effect when enabled and track durat
 - Verify paths in volumiwled.service file are correct
 - Ensure config.yaml exists and is readable
 
+## Examples
+
+See [EXAMPLES.md](EXAMPLES.md) for:
+- API response examples from Volumio and WLED
+- Effect behavior demonstrations
+- Additional configuration examples
+- Testing without hardware
+- Common LED strip configurations
+
 ## API References
 
 - [Volumio API Documentation](https://volumio.github.io/docs/API/REST_API.html)
